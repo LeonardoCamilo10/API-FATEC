@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { Product } from './product.entity';
+import { Product2 } from './product.entity';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  async listar(): Promise<Product[]> {
+  async listar(): Promise<Product2[]> {
     return this.productService.findAll();
   }
 }
