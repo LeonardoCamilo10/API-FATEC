@@ -6,14 +6,16 @@ export const databaseProviders = [
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'mysql',
-        host: 'fateclabdesweb.mysql.dbaas.com.br',
+        host: process.env.DB_HOST,
         port: 3306,
-        username: 'fateclabdesweb',
-        password: 'LabDesWeb1234@',
-        database: 'fateclabdesweb',
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       });
+
+      console.log(process.env.DB_USERNAME);
 
       return dataSource.initialize();
     },
