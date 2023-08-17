@@ -15,8 +15,6 @@ export const databaseProviders = [
         synchronize: true,
       });
 
-      console.log(process.env.DB_USERNAME);
-
       return dataSource.initialize();
     },
   },

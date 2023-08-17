@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Product2 {
@@ -34,4 +40,10 @@ export class Product2 {
 
   @Column()
   altura: number;
+
+  @CreateDateColumn({ name: 'created_At', select: false })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_At', select: false })
+  updatedAt: Date;
 }
