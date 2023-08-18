@@ -1,7 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product2 } from './product.entity';
-import { find } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -24,6 +23,18 @@ export class ProductService {
     }
 
     return findIdProduct;
+  }
+
+  async deleteProduct(id: number) {
+    const findIdProduct = await this.productRepository.findOne({
+      where: { id: id },
+    });
+
+    if (findIdProduct === null) {
+      throw new NotFoundException('Product Not exists!');
+    }
+
+    await this.productRepository.remove(findIdProduct);
   }
 
   async createProduct(body: object) {

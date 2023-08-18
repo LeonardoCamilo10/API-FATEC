@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product2 } from './product.entity';
@@ -16,8 +17,19 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get('product')
-  async listar(): Promise<Product2[]> {
-    return this.productService.findAllProduct();
+  async findAll(): Promise<Product2[]> {
+    return await this.productService.findAllProduct();
+  }
+
+  @Get('product/:id')
+  async findID(@Param('id') id: number) {
+    return await this.productService.findIdProduct(id);
+  }
+
+  @HttpCode(204)
+  @Delete('product/:id')
+  async delete(@Param('id') id: number) {
+    await this.productService.deleteProduct(id);
   }
 
   @HttpCode(201)
