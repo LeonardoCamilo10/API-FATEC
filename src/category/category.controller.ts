@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { Category2 } from './category.entity';
+import { category } from './category.entity';
 import { createCategoryDto } from './dtos/category.dto';
 
 @Controller('api/v1')
@@ -17,7 +17,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get('category')
-  async findAll(): Promise<Category2[]> {
+  async findAll(): Promise<category[]> {
     return await this.categoryService.findAllCategory();
   }
 

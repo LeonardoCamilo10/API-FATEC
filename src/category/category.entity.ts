@@ -1,4 +1,4 @@
-import { Product2 } from 'src/product/product.entity';
+import { Product } from 'src/product/product.entity';
 import {
   Entity,
   Column,
@@ -9,15 +9,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Category2 {
+export class category {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   nome: string;
 
-  @OneToMany(() => Product2, () => Category2)
-  id_product: Product2[];
+  @OneToMany(() => Product, () => category)
+  id_product: Product[];
 
   @CreateDateColumn({ name: 'created_At', select: false })
   createdAt: Date;

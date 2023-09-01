@@ -1,12 +1,12 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Category2 } from './category.entity';
+import { category } from './category.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @Inject('CATEGORY_REPOSITORY')
-    private categoryRepository: Repository<Category2>,
+    private categoryRepository: Repository<category>,
   ) {}
 
   async findAllCategory() {

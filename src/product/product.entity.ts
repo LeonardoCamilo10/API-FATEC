@@ -1,4 +1,4 @@
-import { Category2 } from 'src/category/category.entity';
+import { category } from 'src/category/category.entity';
 import {
   Entity,
   Column,
@@ -10,15 +10,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Product2 {
+export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Category2, () => Product2, {
+  @ManyToOne(() => category, () => Product, {
     eager: true,
   })
-  @JoinColumn()
-  id_categoria: Category2;
+  @JoinColumn({ name: 'id_categoria' })
+  id_categoria: category;
 
   @Column()
   nome: string;

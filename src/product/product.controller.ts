@@ -9,7 +9,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { Product2 } from './product.entity';
+import { Product } from './product.entity';
 import { createProductDto } from './dtos/product.dto';
 
 @Controller('api/v1')
@@ -17,13 +17,18 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get('product')
-  async findAll(): Promise<Product2[]> {
+  async findAll(): Promise<Product[]> {
     return await this.productService.findAllProduct();
   }
 
   @Get('product/:id')
   async findID(@Param('id') id: number) {
     return await this.productService.findIdProduct(id);
+  }
+
+  @Get('product/category/:id')
+  async findCategory(@Param('id') id: number) {
+    return await this.productService.findCategory(id);
   }
 
   @HttpCode(204)
