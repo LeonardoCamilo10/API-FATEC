@@ -28,7 +28,7 @@ export class ProductService {
   }
 
   async findCategory(id: number) {
-    const findCategory = await this.productRepository.findOne({
+    const findCategory = await this.productRepository.find({
       where: {
         id_categoria: {
           id: id,
