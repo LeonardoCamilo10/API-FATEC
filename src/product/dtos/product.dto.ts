@@ -2,8 +2,9 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
-  MaxLength,
+  MaxLength
 } from 'class-validator';
 
 export class createProductDto {
@@ -36,6 +37,7 @@ export class createProductDto {
   @IsNumber()
   peso: string;
 
+  @IsOptional()
   @IsArray()
   images: string[];
 }
