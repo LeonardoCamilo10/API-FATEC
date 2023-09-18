@@ -97,14 +97,15 @@ export class ProductService {
   async updateProductImage(images: string[], product: object) {
     const productId = product['id'];
 
-    const productWithImages = await this.productImageRepository.findOne({
-      where: { productId: product },
+    const productWithImages = await this.productImageRepository.find({
+      where: {
+        productId: {
+          id: productId,
+        },
+      },
     });
 
-    console.log(productWithImages);
-    return;
     await this.productImageRepository.remove(productWithImages);
-    return;
 
     for await (const iterator of images) {
       const produtctImageObj = {

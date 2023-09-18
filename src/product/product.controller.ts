@@ -8,7 +8,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
+import { ProductService } from './ProductService';
 import { Product } from './product.entity';
 import { createProductDto } from './dtos/product.dto';
 

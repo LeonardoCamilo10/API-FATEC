@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class createProductDto {
   @IsNotEmpty()
@@ -7,12 +13,11 @@ export class createProductDto {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(80)
+  @MaxLength(100)
   nome: string;
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(80)
   descricao: string;
 
   @IsNotEmpty()
@@ -30,4 +35,7 @@ export class createProductDto {
   @IsNotEmpty()
   @IsNumber()
   peso: string;
+
+  @IsArray()
+  images: string[];
 }

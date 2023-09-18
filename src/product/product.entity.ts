@@ -7,7 +7,9 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
+import { Product_Image } from './product_image.entity';
 
 @Entity()
 export class Product {
@@ -46,6 +48,12 @@ export class Product {
 
   @Column()
   altura: number;
+
+  @OneToMany(() => Product_Image, (productImage) => productImage.productId, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  images: Product_Image[];
 
   @CreateDateColumn({ name: 'created_At', select: false })
   createdAt: Date;
