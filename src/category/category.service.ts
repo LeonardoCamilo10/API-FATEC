@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { category } from './category.entity';
 
@@ -59,7 +64,7 @@ export class CategoryService {
     });
 
     if (findNameCategory.length > 0 && findNameCategory[0].id != id) {
-      throw new NotFoundException('Category exists!');
+      throw new BadRequestException('Category exists!');
     }
   }
 }
