@@ -14,28 +14,31 @@ export class createProductDto {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(100)
-  nome: string;
+  desc: string;
 
   @IsNotEmpty()
   @IsString()
-  descricao: string;
+  unity: string;
 
   @IsNotEmpty()
   @IsNumber()
-  altura: string;
+  height: number;
 
   @IsNotEmpty()
   @IsNumber()
-  largura: string;
+  width: number;
 
   @IsNotEmpty()
   @IsNumber()
-  comprimento: string;
+  weight: number;
 
   @IsNotEmpty()
   @IsNumber()
-  peso: string;
+  price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  stock: number;
 
   @IsOptional()
   @IsArray()

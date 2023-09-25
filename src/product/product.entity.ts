@@ -20,7 +20,7 @@ export class Product {
   desc: string;
 
   @Column()
-  unity: number;
+  unity: string;
 
   @Column()
   weight: number;

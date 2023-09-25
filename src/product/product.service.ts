@@ -59,37 +59,43 @@ export class ProductService {
   }
 
   async createProduct(body: object) {
-    await this.findNameProduct(body['nome']);
+    await this.findDescProduct(body['desc']);
     await this.categoryService.findIdCategory(Number(body['id_categoria']));
 
     const product = this.productRepository.create(body);
 
     await this.productRepository.save(product);
-    await this.createProductImage(body['images'], product);
 
-    return product;
+    if (body['images'] != '') {
+      await this.createProductImage(body['images'], product);
+    }
+
+    return await this.findIdProduct(product['id']);
   }
 
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
       const produtctImageObj = {
         product: product['id'],
-        image: iterator['image'],
+        image_path: iterator['image'],
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
       this.productImageRepository.save(productImage);
     }
+
+    return true;
   }
 
   async updateProduct(body: object, id: number) {
     const findProduct = await this.findIdProduct(id);
-    await this.findNameProduct(body['nome'], id);
+    await this.findDescProduct(body['desc'], id);
     await this.categoryService.findIdCategory(Number(body['id_categoria']));
 
     const updateProduct = Object.assign(findProduct, body);
     updateProduct['images'] = undefined;
     await this.productRepository.update({ id }, updateProduct);
+
     await this.updateProductImage(body['images'], updateProduct);
 
     return updateProduct;
@@ -98,8 +104,8 @@ export class ProductService {
   async updateProductImage(images: string[], product: object) {
     const productId = product['id'];
 
-    const productWithImages = await this.productImageRepository.findOne({
-      where: { product: product },
+    const productWithImages = await this.productImageRepository.find({
+      where: { product: { id: productId } },
     });
 
     await this.productImageRepository.remove(productWithImages);
@@ -107,16 +113,16 @@ export class ProductService {
     for await (const iterator of images) {
       const produtctImageObj = {
         product: productId,
-        image: iterator['image'],
+        image_path: iterator['image'],
       };
       const productImage = this.productImageRepository.create(produtctImageObj);
       this.productImageRepository.save(productImage);
     }
   }
 
-  async findNameProduct(name: string, id = 0) {
+  async findDescProduct(desc: string, id = 0) {
     const findNameProduct = await this.productRepository.find({
-      where: { desc: name },
+      where: { desc },
     });
 
     if (findNameProduct.length > 0 && findNameProduct[0].id != id) {
