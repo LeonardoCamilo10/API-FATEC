@@ -15,7 +15,7 @@ import { createCategoryDto } from './dtos/category.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/v1')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
