@@ -9,12 +9,36 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { Product_Image } from './product_image.entity';
+import { Product_Img } from './product_image.entity';
 
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  desc: string;
+
+  @Column()
+  unity: number;
+
+  @Column()
+  weight: number;
+
+  @Column()
+  height: number;
+
+  @Column()
+  width: number;
+
+  @Column()
+  brand: string;
+
+  @Column()
+  price: number;
+
+  @Column()
+  stock: number;
 
   @ManyToOne(() => category, () => Product, {
     eager: true,
@@ -22,38 +46,11 @@ export class Product {
   @JoinColumn({ name: 'id_categoria' })
   id_categoria: category;
 
-  @Column()
-  nome: string;
-
-  @Column()
-  descricao: string;
-
-  @Column()
-  marca: string;
-
-  @Column()
-  preco: number;
-
-  @Column()
-  estoque: number;
-
-  @Column()
-  largura: number;
-
-  @Column()
-  comprimento: number;
-
-  @Column()
-  peso: number;
-
-  @Column()
-  altura: number;
-
-  @OneToMany(() => Product_Image, (productImage) => productImage.productId, {
+  @OneToMany(() => Product_Img, (productImage) => productImage.product, {
     eager: true,
     onDelete: 'CASCADE',
   })
-  images: Product_Image[];
+  images: Product_Img[];
 
   @CreateDateColumn({ name: 'created_At', select: false })
   createdAt: Date;

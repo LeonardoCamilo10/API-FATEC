@@ -26,14 +26,14 @@ export class CategoryService {
   }
 
   async createCategory(body: object) {
-    await this.findNameCategory(body['nome']);
+    await this.findNameCategory(body['name']);
     const product = this.categoryRepository.create(body);
     return await this.categoryRepository.save(product);
   }
 
   async updateCategory(body: object, id: number) {
     const findIdCategory = await this.findIdCategory(id);
-    await this.findNameCategory(body['nome'], id);
+    await this.findNameCategory(body['name'], id);
     const updateCategory = Object.assign(findIdCategory, body);
 
     await this.categoryRepository.update({ id }, updateCategory);
@@ -55,7 +55,7 @@ export class CategoryService {
 
   async findNameCategory(name: string, id = 0) {
     const findNameCategory = await this.categoryRepository.find({
-      where: { nome: name },
+      where: { name },
     });
 
     if (findNameCategory.length > 0 && findNameCategory[0].id != id) {

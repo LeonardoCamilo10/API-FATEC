@@ -4,5 +4,5 @@ export class createCategoryDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(40)
-  nome: string;
+  name: string;
 }

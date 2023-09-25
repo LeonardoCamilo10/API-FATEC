@@ -8,8 +8,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ProductService } from './ProductService';
-import { Product } from './product.entity';
+import { ProductService } from './product.service';
 import { createProductDto } from './dtos/product.dto';
 
 @Controller('api/v1')
@@ -17,7 +16,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get('product')
-  async findAll(): Promise<Product[]> {
+  async findAll() {
     return await this.productService.findAllProduct();
   }
 

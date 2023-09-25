@@ -2,7 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { CategoryService } from 'src/category/category.service';
-import { Product_Image } from './product_image.entity';
+import { Product_Img } from './product_image.entity';
 
 @Injectable()
 export class ProductService {
@@ -10,7 +10,7 @@ export class ProductService {
     @Inject('PRODUCT_REPOSITORY')
     private productRepository: Repository<Product>,
     @Inject('PRODUCT_IMAGE_REPOSITORY')
-    private productImageRepository: Repository<Product_Image>,
+    private productImageRepository: Repository<Product_Img>,
     private categoryService: CategoryService,
   ) {}
 
@@ -73,9 +73,10 @@ export class ProductService {
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
       const produtctImageObj = {
-        productId: product['id'],
+        product: product['id'],
         image: iterator['image'],
       };
+
       const productImage = this.productImageRepository.create(produtctImageObj);
       this.productImageRepository.save(productImage);
     }
@@ -98,17 +99,14 @@ export class ProductService {
     const productId = product['id'];
 
     const productWithImages = await this.productImageRepository.findOne({
-      where: { productId: product },
+      where: { product: product },
     });
 
-    console.log(productWithImages);
-    return;
     await this.productImageRepository.remove(productWithImages);
-    return;
 
     for await (const iterator of images) {
       const produtctImageObj = {
-        productId: productId,
+        product: productId,
         image: iterator['image'],
       };
       const productImage = this.productImageRepository.create(produtctImageObj);
@@ -118,7 +116,7 @@ export class ProductService {
 
   async findNameProduct(name: string, id = 0) {
     const findNameProduct = await this.productRepository.find({
-      where: { nome: name },
+      where: { desc: name },
     });
 
     if (findNameProduct.length > 0 && findNameProduct[0].id != id) {
