@@ -65,8 +65,8 @@ export class ProductService {
 
   async createProduct(body: object) {
     await this.findDescProduct(body['desc']);
-    await this.categoryService.findIdCategory(Number(body['id_categoria']));
-
+    await this.categoryService.findIdCategory(Number(body['category_id']));
+    body['category_'] = body['category_id'];
     const product = this.productRepository.create(body);
 
     await this.productRepository.save(product);
@@ -81,7 +81,7 @@ export class ProductService {
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
       const produtctImageObj = {
-        product: product['id'],
+        product_: product['id'],
         image_path: iterator['image'],
       };
 
@@ -95,9 +95,12 @@ export class ProductService {
   async updateProduct(body: object, id: number) {
     const findProduct = await this.findIdProduct(id);
     await this.findDescProduct(body['desc'], id);
-    await this.categoryService.findIdCategory(Number(body['id_categoria']));
+    await this.categoryService.findIdCategory(Number(body['category_id']));
+    body['category_'] = body['category_id'];
+    body['category_id'] = undefined;
 
     const updateProduct = Object.assign(findProduct, body);
+
     updateProduct['images'] = undefined;
     await this.productRepository.update({ id }, updateProduct);
 
@@ -117,7 +120,7 @@ export class ProductService {
 
     for await (const iterator of images) {
       const produtctImageObj = {
-        product: productId,
+        product_: productId,
         image_path: iterator['image'],
       };
       const productImage = this.productImageRepository.create(produtctImageObj);
