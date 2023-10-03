@@ -21,9 +21,9 @@ export class Product_Img {
   @Column()
   image_path: string;
 
-  @CreateDateColumn({ name: 'created_At', select: false })
+  @CreateDateColumn({ name: 'created_at', select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_At', select: false })
+  @UpdateDateColumn({ name: 'updated_at', select: false })
   updatedAt: Date;
 }

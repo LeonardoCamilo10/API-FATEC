@@ -43,8 +43,8 @@ export class Product {
   @ManyToOne(() => category, () => Product, {
     eager: true,
   })
-  @JoinColumn({ name: 'id_categoria' })
-  category_id: category;
+  @JoinColumn()
+  category_: category;
 
   @OneToMany(() => Product_Img, (productImage) => productImage.product_, {
     eager: true,
