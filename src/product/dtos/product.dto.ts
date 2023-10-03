@@ -4,13 +4,12 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  MaxLength,
 } from 'class-validator';
 
 export class createProductDto {
   @IsNotEmpty()
   @IsNumber()
-  id_categoria: number;
+  category_id: number;
 
   @IsNotEmpty()
   @IsString()
