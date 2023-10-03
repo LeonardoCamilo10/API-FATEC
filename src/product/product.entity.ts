@@ -44,17 +44,17 @@ export class Product {
     eager: true,
   })
   @JoinColumn({ name: 'id_categoria' })
-  id_categoria: category;
+  category_id: category;
 
-  @OneToMany(() => Product_Img, (productImage) => productImage.product, {
+  @OneToMany(() => Product_Img, (productImage) => productImage.product_, {
     eager: true,
     onDelete: 'CASCADE',
   })
   images: Product_Img[];
 
-  @CreateDateColumn({ name: 'created_At', select: false })
+  @CreateDateColumn({ name: 'created_at', select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_At', select: false })
+  @UpdateDateColumn({ name: 'updated_at', select: false })
   updatedAt: Date;
 }

@@ -38,7 +38,7 @@ export class ProductService {
   async findCategory(id: number) {
     const findCategory = await this.productRepository.find({
       where: {
-        id_categoria: {
+        category_id: {
           id: id,
         },
       },
@@ -110,7 +110,7 @@ export class ProductService {
     const productId = product['id'];
 
     const productWithImages = await this.productImageRepository.find({
-      where: { product: { id: productId } },
+      where: { product_: { id: productId } },
     });
 
     await this.productImageRepository.remove(productWithImages);
