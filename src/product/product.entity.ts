@@ -17,6 +17,9 @@ export class Product {
   id: number;
 
   @Column()
+  name: string;
+
+  @Column()
   desc: string;
 
   @Column()

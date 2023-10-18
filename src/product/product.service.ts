@@ -64,8 +64,13 @@ export class ProductService {
   }
 
   async createProduct(body: object) {
-    await this.findDescProduct(body['desc']);
+    await this.findDescProduct(body['name']);
     await this.categoryService.findIdCategory(Number(body['category_id']));
+
+    if (body['images'] != '' && body['images'].length > 5) {
+      throw new BadRequestException('exceeded limit of 5 images');
+    }
+
     body['category_'] = body['category_id'];
     const product = this.productRepository.create(body);
 
@@ -82,7 +87,10 @@ export class ProductService {
     for await (const iterator of images) {
       const produtctImageObj = {
         product_: product['id'],
-        image_path: iterator['image'],
+        name: iterator['name'],
+        type: iterator['type'],
+        image_path:
+          'http://144.22.137.69/ftp/images/produtos/' + iterator['name'],
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
@@ -94,8 +102,12 @@ export class ProductService {
 
   async updateProduct(body: object, id: number) {
     const findProduct = await this.findIdProduct(id);
-    await this.findDescProduct(body['desc'], id);
+    await this.findDescProduct(body['name'], id);
     await this.categoryService.findIdCategory(Number(body['category_id']));
+
+    if (body['images'] != '' && body['images'].length > 5) {
+      throw new BadRequestException('exceeded limit of 5 images');
+    }
     body['category_'] = body['category_id'];
     body['category_id'] = undefined;
 
@@ -120,17 +132,21 @@ export class ProductService {
 
     for await (const iterator of images) {
       const produtctImageObj = {
-        product_: productId,
-        image_path: iterator['image'],
+        product_: product['id'],
+        name: iterator['name'],
+        type: iterator['type'],
+        image_path:
+          'http://144.22.137.69/ftp/images/produtos/' + iterator['name'],
       };
+
       const productImage = this.productImageRepository.create(produtctImageObj);
       this.productImageRepository.save(productImage);
     }
   }
 
-  async findDescProduct(desc: string, id = 0) {
+  async findDescProduct(name: string, id = 0) {
     const findNameProduct = await this.productRepository.find({
-      where: { desc },
+      where: { name },
     });
 
     if (findNameProduct.length > 0 && findNameProduct[0].id != id) {

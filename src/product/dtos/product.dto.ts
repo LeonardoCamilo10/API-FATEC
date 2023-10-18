@@ -13,6 +13,10 @@ export class createProductDto {
 
   @IsNotEmpty()
   @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
   desc: string;
 
   @IsNotEmpty()

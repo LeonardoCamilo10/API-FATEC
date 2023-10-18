@@ -19,6 +19,12 @@ export class Product_Img {
   product_: Product;
 
   @Column()
+  name: string;
+
+  @Column()
+  type: string;
+
+  @Column()
   image_path: string;
 
   @CreateDateColumn({ name: 'created_at', select: false })
