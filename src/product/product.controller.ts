@@ -43,7 +43,8 @@ export class ProductController {
   @Post('product')
   async create(@Body() body: createProductDto) {
     // image name size
-
+    console.log(body['image']);
+    return;
     for await (const iterator of body['images']) {
       const uploadDir = './uploads';
 
