@@ -44,20 +44,20 @@ export class ProductController {
   async create(@Body() body: createProductDto) {
     // image name size
 
-    return body['images'];
     for await (const iterator of body['images']) {
-      const uploadDir = './uploads';
+      return iterator['name'];
+      // const uploadDir = './uploads';
 
-      const filePath = `${uploadDir}/${iterator['name']}`;
+      // const filePath = `${uploadDir}/${iterator['name']}`;
 
-      const base64Data = iterator['image'].split(';base64,').pop();
-      try {
-        fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
-        console.log(base64Data);
-        console.log('arquivo salvo');
-      } catch (error) {
-        console.log(error);
-      }
+      // const base64Data = iterator['image'].split(';base64,').pop();
+      // try {
+      //   fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
+      //   console.log(base64Data);
+      //   console.log('arquivo salvo');
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
 
     return;
