@@ -5,6 +5,7 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { CategoryModule } from 'src/category/category.module';
 import { productImageProviders } from './product_image.provider';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [DatabaseModule, CategoryModule],
