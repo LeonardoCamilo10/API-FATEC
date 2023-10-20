@@ -42,25 +42,6 @@ export class ProductController {
   @HttpCode(201)
   @Post('product')
   async create(@Body() body: createProductDto) {
-    // image name size
-
-    for await (const iterator of body['images']) {
-      return iterator;
-      // const uploadDir = './uploads';
-
-      // const filePath = `${uploadDir}/${iterator['name']}`;
-
-      // const base64Data = iterator['image'].split(';base64,').pop();
-      // try {
-      //   fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
-      //   console.log(base64Data);
-      //   console.log('arquivo salvo');
-      // } catch (error) {
-      //   console.log(error);
-      // }
-    }
-
-    return;
     const product = await this.productService.createProduct(body);
     return product;
   }

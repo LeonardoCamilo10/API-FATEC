@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { CategoryService } from 'src/category/category.service';
 import { Product_Img } from './product_image.entity';
+import { FtpService } from 'nestjs-ftp';
 
 @Injectable()
 export class ProductService {
@@ -17,6 +18,7 @@ export class ProductService {
     @Inject('PRODUCT_IMAGE_REPOSITORY')
     private productImageRepository: Repository<Product_Img>,
     private categoryService: CategoryService,
+    private readonly _ftpService: FtpService,
   ) {}
 
   async findAllProduct(): Promise<Product[]> {
@@ -85,6 +87,10 @@ export class ProductService {
 
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
+      const destination = `ftp/images/produto/${iterator['name']}`;
+
+      await this._ftpService.upload(iterator['image'], destination);
+
       const produtctImageObj = {
         product_: product['id'],
         name: iterator['name'],
