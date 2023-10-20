@@ -87,7 +87,7 @@ export class ProductService {
 
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
-      const destination = `ftp/images/produto/${iterator['name']}`;
+      const destination = `ftp/images/produto/teste`;
 
       await this._ftpService.upload(iterator['image'], destination);
 
@@ -96,7 +96,7 @@ export class ProductService {
         name: iterator['name'],
         type: iterator['type'],
         image_path:
-          'http://144.22.137.69/ftp/images/produtos/' + iterator['name'],
+          'http://144.22.137.69/ftp/images/produtos/teste',
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
