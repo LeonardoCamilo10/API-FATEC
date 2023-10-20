@@ -45,7 +45,7 @@ export class ProductController {
     // image name size
 
     for await (const iterator of body['images']) {
-      return iterator['name'];
+      return iterator;
       // const uploadDir = './uploads';
 
       // const filePath = `${uploadDir}/${iterator['name']}`;
