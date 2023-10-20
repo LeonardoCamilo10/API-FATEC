@@ -91,8 +91,13 @@ export class ProductService {
 
       try {
         const buffer = Buffer.from(iterator['image'], 'base64');
-        fs.writeFileSync('teste.png', buffer);
-        await this._ftpService.upload('teste.png', destination + 'teste.png');
+
+        fs.writeFileSync('iphone11.png', buffer);
+
+        await this._ftpService.upload(
+          'iphone11.png',
+          destination + 'iphone11.png',
+        );
       } catch (error) {
         console.log('erro gerado: ', error);
       }
