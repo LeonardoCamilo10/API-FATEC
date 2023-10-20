@@ -9,7 +9,7 @@ import { Product } from './product.entity';
 import { CategoryService } from 'src/category/category.service';
 import { Product_Img } from './product_image.entity';
 import { FtpService } from 'nestjs-ftp';
-
+import * as fs from 'fs';
 @Injectable()
 export class ProductService {
   constructor(
@@ -87,16 +87,21 @@ export class ProductService {
 
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
-      const destination = `ftp/images/produto/teste`;
+      const destination = `/images/produtos/`;
 
-      await this._ftpService.upload(iterator['image'], destination);
+      try {
+        const buffer = Buffer.from(iterator['image'], 'base64');
+        fs.writeFileSync('teste.png', buffer);
+        await this._ftpService.upload('teste.png', destination + 'teste.png');
+      } catch (error) {
+        console.log('erro gerado: ', error);
+      }
 
       const produtctImageObj = {
         product_: product['id'],
         name: iterator['name'],
         type: iterator['type'],
-        image_path:
-          'http://144.22.137.69/ftp/images/produtos/teste',
+        image_path: 'http://144.22.137.69/ftp/images/produtos/teste.png',
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
