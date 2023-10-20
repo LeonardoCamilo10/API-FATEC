@@ -10,6 +10,8 @@ import { CategoryService } from 'src/category/category.service';
 import { Product_Img } from './product_image.entity';
 import { FtpService } from 'nestjs-ftp';
 import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -89,24 +91,31 @@ export class ProductService {
     for await (const iterator of images) {
       const destination = `/images/produtos/`;
 
+      const match = iterator['image'].match(/^data:image\/([a-zA-Z]+);base64,/);
+      const imageType = match[1];
+
+      const filename = uuidv4() + '.' + imageType;
+
+      const base64Data = iterator['image'].replace(
+        /^data:image\/\w+;base64,/,
+        '',
+      );
+
+      const buffer = Buffer.from(base64Data, 'base64');
+
       try {
-        const buffer = Buffer.from(iterator['image'], 'base64');
-
-        fs.writeFileSync('iphone11.png', buffer);
-
-        await this._ftpService.upload(
-          'iphone11.png',
-          destination + 'iphone11.png',
-        );
+        fs.writeFileSync(filename, buffer, 'base64');
+        await this._ftpService.upload(filename, destination + filename);
+        fs.unlinkSync(filename);
       } catch (error) {
-        console.log('erro gerado: ', error);
+        console.log('Erro ao processar imagem:', error);
       }
 
       const produtctImageObj = {
         product_: product['id'],
-        name: iterator['name'],
-        type: iterator['type'],
-        image_path: 'http://144.22.137.69/ftp/images/produtos/teste.png',
+        name: filename,
+        type: imageType,
+        image_path: 'http://144.22.137.69/ftp/images/produtos/' + filename,
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
