@@ -24,7 +24,9 @@ export class ProductService {
   ) {}
 
   async findAllProduct(): Promise<Product[]> {
-    return await this.productRepository.find({ relations: ['images'] });
+    return await this.productRepository.find({
+      relations: ['images'],
+    });
   }
 
   async findIdProduct(id: number) {
@@ -90,7 +92,6 @@ export class ProductService {
   async createProductImage(images: string[], product: object) {
     for await (const iterator of images) {
       const destination = `/images/produtos/`;
-
       const match = iterator['image'].match(/^data:image\/([a-zA-Z]+);base64,/);
       const imageType = match[1];
 
@@ -115,7 +116,7 @@ export class ProductService {
         product_: product['id'],
         name: filename,
         type: imageType,
-        image_path: 'http://144.22.137.69/ftp/images/produtos/' + filename,
+        image_path: 'http://144.22.137.69/ftp' + destination + filename,
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
@@ -148,25 +149,17 @@ export class ProductService {
 
   async updateProductImage(images: string[], product: object) {
     const productId = product['id'];
-
+    const destination = `/images/produtos/`;
     const productWithImages = await this.productImageRepository.find({
       where: { product_: { id: productId } },
     });
 
-    await this.productImageRepository.remove(productWithImages);
-
-    for await (const iterator of images) {
-      const produtctImageObj = {
-        product_: product['id'],
-        name: iterator['name'],
-        type: iterator['type'],
-        image_path:
-          'http://144.22.137.69/ftp/images/produtos/' + iterator['name'],
-      };
-
-      const productImage = this.productImageRepository.create(produtctImageObj);
-      this.productImageRepository.save(productImage);
+    for (const iterator of productWithImages) {
+      await this._ftpService.delete(destination + iterator['name']);
     }
+
+    await this.productImageRepository.remove(productWithImages);
+    await this.createProductImage(images, product);
   }
 
   async findDescProduct(name: string, id = 0) {
