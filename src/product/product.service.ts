@@ -90,8 +90,9 @@ export class ProductService {
   }
 
   async createProductImage(images: string[], product: object) {
+    const destination = `/images/produtos/`;
+
     for await (const iterator of images) {
-      const destination = `/images/produtos/`;
       const match = iterator['image'].match(/^data:image\/([a-zA-Z]+);base64,/);
       const imageType = match[1];
 
