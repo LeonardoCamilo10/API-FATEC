@@ -7,12 +7,11 @@ import {
   Put,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { createProductDto } from './dtos/product.dto';
-import { AuthGuard } from '@nestjs/passport';
-import * as fs from 'fs';
+import { createProductDto } from './dtos/create_product.dto';
+import { updateProductDto } from './dtos/update_product.dto';
+import { addProductImageDto } from './dtos/add_image.dto';
 @Controller('api/v1')
 // @UseGuards(AuthGuard('jwt'))
 export class ProductController {
@@ -48,8 +47,24 @@ export class ProductController {
 
   @HttpCode(201)
   @Put('product/:id')
-  async update(@Body() body: createProductDto, @Param('id') id: string) {
+  async update(@Body() body: updateProductDto, @Param('id') id: string) {
     const product = await this.productService.updateProduct(body, Number(id));
     return product;
+  }
+
+  @HttpCode(201)
+  @Post('product/image/:idProduct')
+  async createImage(
+    @Body() body: addProductImageDto,
+    @Param('idProduct') id: number,
+  ) {
+    const product = await this.productService.addImageProduct(body, id);
+    return product;
+  }
+
+  @HttpCode(204)
+  @Delete('product/image/:idImage')
+  async deleteImage(@Param('idImage') id: number) {
+    await this.productService.deleteImageProduct(id);
   }
 }

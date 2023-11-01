@@ -11,6 +11,7 @@ import { Product_Img } from './product_image.entity';
 import { FtpService } from 'nestjs-ftp';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import { createProductImageDto } from './dtos/create_product_Image.dto';
 
 @Injectable()
 export class ProductService {
@@ -70,7 +71,7 @@ export class ProductService {
   }
 
   async createProduct(body: object) {
-    await this.findDescProduct(body['name']);
+    await this.findNameProduct(body['name']);
     await this.categoryService.findIdCategory(Number(body['category_id']));
 
     if (body['images'] != '' && body['images'].length > 5) {
@@ -113,7 +114,7 @@ export class ProductService {
         console.log('Erro ao processar imagem:', error);
       }
 
-      const produtctImageObj = {
+      const produtctImageObj: createProductImageDto = {
         product_: product['id'],
         name: filename,
         type: imageType,
@@ -129,41 +130,91 @@ export class ProductService {
 
   async updateProduct(body: object, id: number) {
     const findProduct = await this.findIdProduct(id);
-    await this.findDescProduct(body['name'], id);
+    await this.findNameProduct(body['name'], id);
     await this.categoryService.findIdCategory(Number(body['category_id']));
 
-    if (body['images'] != '' && body['images'].length > 5) {
-      throw new BadRequestException('exceeded limit of 5 images');
-    }
     body['category_'] = body['category_id'];
+
     body['category_id'] = undefined;
+    findProduct['images'] = undefined;
 
     const updateProduct = Object.assign(findProduct, body);
 
-    updateProduct['images'] = undefined;
     await this.productRepository.update({ id }, updateProduct);
-
-    await this.updateProductImage(body['images'], updateProduct);
 
     return updateProduct;
   }
 
-  async updateProductImage(images: string[], product: object) {
-    const productId = product['id'];
-    const destination = `/images/produtos/`;
-    const productWithImages = await this.productImageRepository.find({
-      where: { product_: { id: productId } },
-    });
+  // async updateProductImage(images: string[], product: object) {
+  //   const productId = product['id'];
+  //   const destination = `/images/produtos/`;
+  //   const productWithImages = await this.productImageRepository.find({
+  //     where: { product_: { id: productId } },
+  //   });
 
-    for (const iterator of productWithImages) {
-      await this._ftpService.delete(destination + iterator['name']);
+  //   for (const iterator of productWithImages) {
+  //     await this._ftpService.delete(destination + iterator['name']);
+  //   }
+
+  //   await this.productImageRepository.remove(productWithImages);
+  //   await this.createProductImage(images, product);
+  // }
+
+  async addImageProduct(body: object, id: number) {
+    const product = await this.findIdProduct(id);
+
+    const destination = `/images/produtos/`;
+
+    const match = body['image'].match(/^data:image\/([a-zA-Z]+);base64,/);
+    const imageType = match[1];
+
+    const filename = uuidv4() + '.' + imageType;
+
+    const base64Data = body['image'].replace(/^data:image\/\w+;base64,/, '');
+
+    const buffer = Buffer.from(base64Data, 'base64');
+
+    try {
+      fs.writeFileSync(filename, buffer, 'base64');
+      await this._ftpService.upload(filename, destination + filename);
+      fs.unlinkSync(filename);
+    } catch (error) {
+      console.log('Erro ao processar imagem:', error);
     }
 
-    await this.productImageRepository.remove(productWithImages);
-    await this.createProductImage(images, product);
+    const produtctImageObj: createProductImageDto = {
+      product_: product,
+      name: filename,
+      type: imageType,
+      image_path: 'http://144.22.137.69/ftp' + destination + filename,
+    };
+
+    const productImage = this.productImageRepository.create(produtctImageObj);
+    this.productImageRepository.save(productImage);
+
+    return {
+      name: productImage['name'],
+      type: productImage['type'],
+      image_path: productImage['image_path'],
+    };
   }
 
-  async findDescProduct(name: string, id = 0) {
+  async deleteImageProduct(id: number) {
+    const productImage = await this.productImageRepository.findOne({
+      where: { id },
+    });
+
+    const destination = `/images/produtos/`;
+
+    if (productImage) {
+      await this._ftpService.delete(destination + productImage['name']);
+      await this.productImageRepository.remove(productImage);
+    } else {
+      throw new NotFoundException('Image not exist');
+    }
+  }
+
+  async findNameProduct(name: string, id = 0) {
     const findNameProduct = await this.productRepository.find({
       where: { name },
     });
