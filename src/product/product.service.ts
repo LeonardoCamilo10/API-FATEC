@@ -118,7 +118,7 @@ export class ProductService {
         product_: product['id'],
         name: filename,
         type: imageType,
-        image_path: 'http://144.22.137.69/ftp' + destination + filename,
+        image_path: 'https://144.22.137.69/ftp' + destination + filename,
       };
 
       const productImage = this.productImageRepository.create(produtctImageObj);
@@ -186,7 +186,7 @@ export class ProductService {
       product_: product,
       name: filename,
       type: imageType,
-      image_path: 'http://144.22.137.69/ftp' + destination + filename,
+      image_path: 'https://144.22.137.69/ftp' + destination + filename,
     };
 
     const productImage = this.productImageRepository.create(produtctImageObj);
