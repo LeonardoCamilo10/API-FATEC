@@ -4,7 +4,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { CategoryService } from 'src/category/category.service';
 import { Product_Img } from './product_image.entity';
@@ -28,6 +28,20 @@ export class ProductService {
     return await this.productRepository.find({
       relations: ['images'],
     });
+  }
+
+  async findWithSearch(body: object) {
+    const findWithSearch = await this.productRepository.find({
+      where: { name: Like(`%${body['search']}%`) },
+    });
+
+    if (findWithSearch.length === 0) {
+      throw new NotFoundException(
+        `Sorry, we couldn't find products with for "${body['search']}"`,
+      );
+    }
+
+    return findWithSearch;
   }
 
   async findIdProduct(id: number) {

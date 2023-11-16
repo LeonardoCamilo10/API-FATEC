@@ -12,6 +12,7 @@ import { ProductService } from './product.service';
 import { createProductDto } from './dtos/create_product.dto';
 import { updateProductDto } from './dtos/update_product.dto';
 import { addProductImageDto } from './dtos/add_image.dto';
+import { searchProductDto } from './dtos/search_product.dto';
 @Controller('api/v1')
 // @UseGuards(AuthGuard('jwt'))
 export class ProductController {
@@ -20,6 +21,11 @@ export class ProductController {
   @Get('product')
   async findAll() {
     return await this.productService.findAllProduct();
+  }
+
+  @Get('product/search')
+  async findWithSearch(@Body() body: searchProductDto) {
+    return await this.productService.findWithSearch(body);
   }
 
   @Get('product/:id')
